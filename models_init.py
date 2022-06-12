@@ -45,7 +45,7 @@ db.drop_all()  # Удаление данных из всех таблиц
 
 db.create_all()  # Добавление всех данных в таблицы
 
-data_list_user = load_data_from_json("Users.json")  # Через функцию загружаем данные JSON-файла в переменную по 'Users'
+data_list_user = load_data_from_json("JSON-files/Users.json")  # Через функцию загружаем данные JSON-файла в переменную по 'Users'
 
 for user in data_list_user:
 	db.session.add(User(
@@ -61,18 +61,23 @@ for user in data_list_user:
 	db.session.commit()  # Вносим все изменения в базу данных
 
 
-data_list_order = load_data_from_json("Orders.json")  # Через функцию загружаем данные JSON-файла в переменную по 'Order'
+data_list_order = load_data_from_json("JSON-files/Orders.json")  # Через функцию загружаем данные JSON-файла в переменную по 'Order'
 
 for order in data_list_order:
-	start_date_format = order["start_date"].split("/")
-	end_date_format = order["end_date"].split("/")
+	# start_date_format = order["start_date"].split("/")
+	# end_date_format = order["end_date"].split("/")
+
+	month_start, day_start, year_start = order['start_date'].split('/')
+	month_end, day_end, year_end = order['end_date'].split('/')
 
 	db.session.add(Order(
 		id=order["id"],
 		name=order["name"],
 		description=order["description"],
-		start_date=datetime.date(day=int(start_date_format[1]), month=int(start_date_format[0]), year=int(start_date_format[2])),
-		end_date=datetime.date(day=int(end_date_format[1]), month=int(end_date_format[0]), year=int(end_date_format[2])),
+		# start_date=datetime.date(day=int(start_date_format[1]), month=int(start_date_format[0]), year=int(start_date_format[2])),
+		# end_date=datetime.date(day=int(end_date_format[1]), month=int(end_date_format[0]), year=int(end_date_format[2])),
+		start_date=datetime.date(int(year_start), int(month_start), int(day_start)),
+		end_date=datetime.date(int(year_end), int(month_end), int(day_end)),
 		address=order["address"],
 		price=order["price"],
 		customer_id=order["customer_id"],
@@ -82,7 +87,7 @@ for order in data_list_order:
 	db.session.commit()  # Вносим все изменения в базу данных
 
 
-data_list_offer = load_data_from_json("Offers.json")  # Через функцию загружаем данные JSON-файла в переменную по 'Offer'
+data_list_offer = load_data_from_json("JSON-files/Offers.json")  # Через функцию загружаем данные JSON-файла в переменную по 'Offer'
 
 for offer in data_list_offer:
 	db.session.add(Offer(id=offer["id"], order_id=offer["order_id"], executor_id=offer["executor_id"],))
